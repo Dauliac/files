@@ -102,6 +102,8 @@
             );
           };
 
+          generateWriterApp = lib.mkEnableOption "generating an app for the writer executable";
+
           writer = {
             exeFilename = lib.mkOption {
               type = lib.types.singleLineStr;
@@ -167,6 +169,14 @@
           ))
           lib.listToAttrs
         ];
+
+        apps = lib.mkIf cfg.generateWriterApp {
+          ${cfg.writer.exeFilename} = {
+            type = "app";
+            program = "${cfg.writer.drv}/bin/${cfg.writer.exeFilename}";
+            meta.description = "Write all configured files to their paths";
+          };
+        };
       };
     }
   );
